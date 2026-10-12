@@ -1,0 +1,45 @@
+                Presentation Layer
+
+                    main.py
+
+                        |
+
+                        v
+
+                Orchestration Layer
+
+                    router.py
+
+                        |
+
+        +---------------+---------------+
+
+        |                               |
+
+        v                               v
+
+    agent.py                    react_agent.py
+
+                        |
+
+                        v
+
+                 Intelligence Layer
+
+                    core/llm.py
+
+                        |
+
+                        v
+
+                  Capability Layer
+
+                     tools/
+
+                        |
+
+                        v
+
+                  Data Layer
+
+                    json files

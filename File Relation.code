@@ -1,0 +1,42 @@
+main.py
+
+  |
+  |
+  v
+
+router.py
+
+  |
+  +----------------+
+  |                |
+  v                v
+
+agent.py       react_agent.py
+
+  |                |
+
+  +-------+--------+
+
+          |
+
+          v
+
+       llm.py
+
+          |
+
+          v
+
+       OpenAI
+
+          |
+
+          v
+
+        Tools
+
+          |
+
+          v
+
+       Data

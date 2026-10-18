@@ -1,7 +1,7 @@
 import json
 import os
 
-from langchain.tools import tool
+from langchain_core.tools import tool
 
 TASKS_FILE = "data/tasks.json"
 
@@ -19,6 +19,11 @@ def add_task(task: str) -> str:
     """
 
     try:
+
+        task = task.strip()
+
+        if not task:
+            return "Error: Task description cannot be empty."
 
         if os.path.exists(TASKS_FILE):
 

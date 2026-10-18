@@ -1,7 +1,7 @@
 import json
 import os
 
-from langchain.tools import tool
+from langchain_core.tools import tool
 
 NOTES_FILE = "data/notes.json"
 

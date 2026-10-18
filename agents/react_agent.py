@@ -1,68 +1,54 @@
-from langchain.agents import (
-    AgentExecutor,
-    create_react_agent
-)
 
-from langchain import hub
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.output_parsers import StrOutputParser
 
 from core.llm import llm
+from memory.memory import memory
 
-from tools.calculator import calculator
-from tools.notes import (
-    save_note,
-    get_notes
-)
-from tools.tasks import (
-    add_task,
-    list_tasks
-)
 
-tools = [
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+You are an analytical AI assistant.
 
-    calculator,
+Your responsibilities:
+- Analyze complex questions carefully.
+- Explain the reasons behind your conclusions.
+- Compare alternatives when appropriate.
+- Organize the response into clear sections.
+- Produce structured, useful reports in the user's language.
+- Clearly distinguish facts, assumptions, and recommendations.
+- Do not claim to have accessed live information or external
+  sources unless that information was provided in the conversation.
 
-    save_note,
-
-    get_notes,
-
-    add_task,
-
-    list_tasks
-
-]
-
-prompt = hub.pull(
-    "hwchase17/react"
-)
-
-agent = create_react_agent(
-
-    llm,
-
-    tools,
-
-    prompt
-
+You must not call tools or perform external actions.
+"""
+        ),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("human", "{input}")
+    ]
 )
 
-agent_executor = AgentExecutor(
 
-    agent=agent,
+chain = prompt | llm | StrOutputParser()
 
-    tools=tools,
 
-    verbose=True
+def run_react_agent(user_input: str) -> str:
 
-)
+    history = memory.load_memory_variables({})["chat_history"]
 
-def run_react_agent(user_input):
-
-    response = agent_executor.invoke(
-
+    response = chain.invoke(
         {
-            "input": user_input
+            "input": user_input,
+            "chat_history": history
         }
-
     )
 
-    return response["output"]
+    memory.save_context(
+        {"input": user_input},
+        {"output": response}
+    )
+
+    return response
